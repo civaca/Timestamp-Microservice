@@ -28,3 +28,30 @@ app.get('/api/hello', function (req, res) {
 var listener = app.listen(process.env.PORT || 3000, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
+app.get("/api/:date?",(req,res,next)=>{
+let { date }=req.params;
+let reg=/^[0-9]{13}$/
+let reg1=/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/
+let newDate;
+
+if (reg.test(date)){
+  newDate=Number(date)
+}else {
+  newDate=date;
+}
+
+let personDate=new Date(newDate);
+if(date==null){
+  personDate= new Date();
+}
+
+if (personDate.toUTCString()=="Invalid Date"){
+  res.json({"error":"Invalid Date"})
+} else{
+res.json({
+  "unix": personDate.getTime(),
+  "utc": personDate.toUTCString()
+})
+}
+})
